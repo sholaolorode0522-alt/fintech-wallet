@@ -21,14 +21,11 @@ body{background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;mar
 .btn-full{width:100%;background:#00ff88;color:#000;padding:16px;border-radius:12px;font-weight:700;border:none;cursor:pointer;margin-top:10px;font-size:16px}
 .btn-dark{width:100%;background:var(--card);color:var(--text);border:1px solid var(--border);padding:14px;border-radius:12px;font-weight:600;cursor:pointer;margin-top:10px}
 .input{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);margin:8px 0;font-size:15px}
-#otpModal,#forgotModal,#modal,#allPage,#detailPage,#settingsPage{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;padding:20px;z-index:200;overflow-y:auto}
+#otpModal,#forgotModal,#modal,#allPage{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;padding:20px;z-index:500;overflow-y:auto}
 .modal-box{background:var(--card);border-radius:20px;padding:24px;width:100%;max-width:360px;border:1px solid var(--border);margin:auto}
 .otp-box{display:flex;gap:8px;justify-content:center;margin:15px 0}
 .otp-box input{width:40px;height:48px;text-align:center;font-size:20px;font-weight:700;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)}
-.acct-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;margin-bottom:20px}
 .balance-card{background:linear-gradient(135deg,#00ff88,#00cc6a);border-radius:20px;padding:22px;margin-bottom:20px;color:#000}
-.transactions{background:var(--card);border-radius:16px;padding:20px;border:1px solid var(--border)}
-.t-item{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer}
 .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-top:1px solid var(--border);display:none;justify-content:space-around;padding:12px 0;z-index:50}
 .nav-item{text-align:center;color:var(--sub);font-size:11px;cursor:pointer}.nav-item.active{color:#00ff88}
 </style>
@@ -42,11 +39,11 @@ body{background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;mar
 <div id="inlineMsg" style="display:none" class="inline-alert"></div>
 
 <div id="loginForm">
-<input class="input" id="loginEmail" placeholder="Email" onkeydown="if(event.key==='Enter') handleLogin()">
-<input class="input" id="loginPass" type="password" placeholder="Password" onkeydown="if(event.key==='Enter') handleLogin()">
-<button class="btn-full" onclick="handleLogin()" type="button">Login</button>
-<div style="text-align:center;margin-top:18px;border-top:1px solid var(--border);padding-top:12px">
-<button onclick="openForgot()" type="button" style="background:none;border:none;color:#888;text-decoration:underline;font-size:13px;cursor:pointer">Forgot Password? Click here</button>
+<input class="input" id="loginEmail" placeholder="Email">
+<input class="input" id="loginPass" type="password" placeholder="Password">
+<button class="btn-full" id="loginBtn" type="button">Login</button>
+<div style="text-align:center;margin-top:15px;border-top:1px solid #2a2a2a;padding-top:12px">
+<button id="forgotLinkBtn" type="button" style="background:none;border:none;color:#888;text-decoration:underline;font-size:13px;cursor:pointer">Forgot Password? Click here</button>
 </div>
 </div>
 
@@ -55,32 +52,127 @@ body{background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;mar
 <input class="input" id="suPhone" placeholder="Phone (11 digits)" maxlength="11">
 <input class="input" id="suEmail" placeholder="Email">
 <input class="input" id="suPass" type="password" placeholder="Password (letter+number+!@#$)">
-<button class="btn-full" onclick="handleSignup()" type="button">Create Account</button>
+<button class="btn-full" id="signupBtn" type="button">Create Account</button>
 </div>
 </div>
 </div>
 
 <div id="otpModal"><div class="modal-box">
 <h3>Verify OTP</h3>
-<p id="otpInfo" style="color:#888;font-size:13px">Code sent</p>
+<p id="otpInfo" style="color:#888;font-size:13px"></p>
 <div class="inline-alert info" id="otpCodeDisplay"></div>
-<div class="otp-box"><input id="o1" maxlength="1" oninput="if(this.value)document.getElementById('o2').focus()"><input id="o2" maxlength="1" oninput="if(this.value)document.getElementById('o3').focus()"><input id="o3" maxlength="1" oninput="if(this.value)document.getElementById('o4').focus()"><input id="o4" maxlength="1" oninput="if(this.value)document.getElementById('o5').focus()"><input id="o5" maxlength="1" oninput="if(this.value)document.getElementById('o6').focus()"><input id="o6" maxlength="1"></div>
-<button class="btn-full" onclick="verifyOtp()" type="button">Verify</button>
+<div class="otp-box"><input id="o1" maxlength="1"><input id="o2" maxlength="1"><input id="o3" maxlength="1"><input id="o4" maxlength="1"><input id="o5" maxlength="1"><input id="o6" maxlength="1"></div>
+<button class="btn-full" id="verifyOtpBtn" type="button">Verify</button>
 </div></div>
 
 <div id="forgotModal"><div class="modal-box">
 <h2>Forgot Password</h2>
 <div id="forgotStep1">
 <p style="color:#888;font-size:13px;margin:10px 0">Enter your registered email</p>
-<input class="input" id="forgotEmail" placeholder="e.g shola@gmail.com">
+<input class="input" id="forgotEmailInput" placeholder="e.g shola@gmail.com">
 <div id="forgotErr" style="display:none" class="inline-alert error"></div>
-<button class="btn-full" onclick="sendForgotOtp()" type="button">Send Code</button>
-<button class="btn-dark" onclick="closeForgot()" type="button">Back to Login</button>
+<button class="btn-full" id="sendCodeBtn" type="button">Send Code</button>
+<button class="btn-dark" id="backBtn" type="button">Back to Login</button>
 </div>
 <div id="forgotStep2" style="display:none">
 <div class="inline-alert info" id="forgotCodeDisplay"></div>
 <p style="font-size:13px;color:#888">Code sent to <b id="forgotEmailShow"></b></p>
-<input class="input" id="forgotOtp" placeholder="Enter 6-digit code">
-<input class="input" id="forgotNewPass" type="password" placeholder="New Password (letter+number+symbol)">
+<input class="input" id="forgotCodeInput" placeholder="Enter 6-digit code">
+<input class="input" id="forgotNewPassInput" type="password" placeholder="New Password">
 <div id="forgotErr2" style="display:none" class="inline-alert error"></div>
-<button class="btn-full"
+<button class="btn-full" id="resetBtn" type="button">Reset Password</button>
+</div>
+</div></div>
+
+<div class="app" id="mainApp">
+<h3 id="userName">Hi</h3><p id="userEmail" style="color:#888;font-size:12px"></p>
+<div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:12px;margin-bottom:20px"><div style="color:#888;font-size:11px">ACCOUNT</div><div id="acctName"></div></div>
+<div class="balance-card"><div>Balance</div><div style="font-size:32px;font-weight:900" id="bal">$40,000</div></div>
+<div style="background:#1a1a1a;padding:20px;border-radius:16px"><div id="list">Welcome!</div></div>
+</div>
+<div class="nav" id="bottomNav"><div class="nav-item active"><div>🏠</div>Home</div><div class="nav-item" onclick="logout()"><div>🚪</div>Logout</div></div>
+
+<script>
+let balance=40000, pendingUser=null, signupCode="", resetCode="", resetEmailTemp="";
+function isValidEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)}
+function isStrongPass(p){return p.length>=6 && /[a-zA-Z]/.test(p) && /[0-9]/.test(p) && /[!@#$%^&*]/.test(p)}
+function genOtp(){return Math.floor(100000+Math.random()*900000).toString()}
+function showMsg(t,type){let el=document.getElementById('inlineMsg');el.textContent=t;el.className='inline-alert '+type;el.style.display='block';setTimeout(()=>el.style.display='none',5000)}
+function switchTab(t){document.getElementById('tabLogin').classList.toggle('active',t=='login');document.getElementById('tabSignup').classList.toggle('active',t=='signup');document.getElementById('loginForm').style.display=t=='login'?'block':'none';document.getElementById('signupForm').style.display=t=='signup'?'block':'none';document.getElementById('inlineMsg').style.display='none'}
+
+// SIGNUP
+document.getElementById('signupBtn').addEventListener('click', function(){
+let n=document.getElementById('suName').value.trim(), ph=document.getElementById('suPhone').value.trim(), em=document.getElementById('suEmail').value.trim(), pw=document.getElementById('suPass').value;
+if(!n||ph.length<10||!isValidEmail(em)){showMsg('Fill name, phone, valid email','error');return}
+if(!isStrongPass(pw)){showMsg('Password must have letter, number & symbol !@#$','error');return}
+let users=JSON.parse(localStorage.getItem('users')||'[]');
+if(users.find(u=>u.email.toLowerCase()==em.toLowerCase())){showMsg('Email exists! Login now','error');switchTab('login');return}
+pendingUser={name:n,phone:ph,email:em,password:pw};signupCode=genOtp();
+document.getElementById('otpInfo').textContent='Code sent to '+em+' & '+ph;
+document.getElementById('otpCodeDisplay').textContent='YOUR CODE (Demo): '+signupCode;
+document.getElementById('otpModal').style.display='flex';
+});
+
+document.getElementById('verifyOtpBtn').addEventListener('click', function(){
+let code=['o1','o2','o3','o4','o5','o6'].map(id=>document.getElementById(id).value).join('');
+if(code!==signupCode){alert('Wrong code! Correct is '+signupCode);return}
+let users=JSON.parse(localStorage.getItem('users')||'[]');users.push(pendingUser);localStorage.setItem('users',JSON.stringify(users));
+document.getElementById('otpModal').style.display='none';['o1','o2','o3','o4','o5','o6'].forEach(id=>document.getElementById(id).value='');
+showMsg('Verified! Now login with your real info ✓','success');switchTab('login');
+});
+
+// LOGIN - FIXED
+document.getElementById('loginBtn').addEventListener('click', function(){
+let em=document.getElementById('loginEmail').value.trim(), pw=document.getElementById('loginPass').value;
+if(!isValidEmail(em)){showMsg('Enter valid email e.g name@gmail.com','error');return}
+if(!pw){showMsg('Enter password','error');return}
+let users=JSON.parse(localStorage.getItem('users')||'[]');
+if(users.length===0){showMsg('No account yet! Click Sign Up first','error');return}
+let user=users.find(u=>u.email.toLowerCase()==em.toLowerCase() && u.password==pw);
+if(!user){showMsg('Wrong email or password! If you never signed up, click Sign Up first.','error');return}
+localStorage.setItem('currentUser',JSON.stringify(user));showApp();
+});
+
+// FORGOT - FIXED WITH NEW IDS
+document.getElementById('forgotLinkBtn').addEventListener('click', function(){
+document.getElementById('forgotModal').style.display='flex';
+document.getElementById('forgotStep1').style.display='block';
+document.getElementById('forgotStep2').style.display='none';
+document.getElementById('forgotErr').style.display='none';
+});
+
+document.getElementById('backBtn').addEventListener('click', function(){document.getElementById('forgotModal').style.display='none'});
+
+document.getElementById('sendCodeBtn').addEventListener('click', function(){
+let em=document.getElementById('forgotEmailInput').value.trim();
+if(!isValidEmail(em)){document.getElementById('forgotErr').textContent='Enter valid email';document.getElementById('forgotErr').style.display='block';return}
+let users=JSON.parse(localStorage.getItem('users')||'[]');let user=users.find(u=>u.email.toLowerCase()==em.toLowerCase());
+if(!user){document.getElementById('forgotErr').textContent='Email not found! Sign Up first';document.getElementById('forgotErr').style.display='block';return}
+resetCode=genOtp();resetEmailTemp=em;
+document.getElementById('forgotEmailShow').textContent=em;
+document.getElementById('forgotCodeDisplay').textContent='RESET CODE (Demo): '+resetCode+' - Copy this!';
+document.getElementById('forgotStep1').style.display='none';
+document.getElementById('forgotStep2').style.display='block';
+});
+
+document.getElementById('resetBtn').addEventListener('click', function(){
+let code=document.getElementById('forgotCodeInput').value.trim(), np=document.getElementById('forgotNewPassInput').value;
+if(code!==resetCode){document.getElementById('forgotErr2').textContent='Wrong code! Correct is '+resetCode;document.getElementById('forgotErr2').style.display='block';return}
+if(!isStrongPass(np)){document.getElementById('forgotErr2').textContent='Password needs letter, number & symbol';document.getElementById('forgotErr2').style.display='block';return}
+let users=JSON.parse(localStorage.getItem('users'));let idx=users.findIndex(u=>u.email.toLowerCase()==resetEmailTemp.toLowerCase());users[idx].password=np;localStorage.setItem('users',JSON.stringify(users));
+document.getElementById('forgotModal').style.display='none';
+document.getElementById('forgotCodeInput').value='';document.getElementById('forgotNewPassInput').value='';
+showMsg('Password reset! Login with new password ✓','success');
+});
+
+function showApp(){let u=JSON.parse(localStorage.getItem('currentUser'));if(!u)return;document.getElementById('authPage').style.display='none';document.getElementById('mainApp').style.display='block';document.getElementById('bottomNav').style.display='flex';document.getElementById('userName').textContent='Hi, '+u.name;document.getElementById('userEmail').textContent=u.email;document.getElementById('acctName').textContent=u.name;document.getElementById('bal').textContent='$'+balance;}
+function logout(){localStorage.removeItem('currentUser');location.reload()}
+function checkLogin(){if(localStorage.getItem('currentUser'))showApp()}
+checkLogin();
+
+// Allow Enter key to login
+document.getElementById('loginPass').addEventListener('keydown', function(e){if(e.key==='Enter') document.getElementById('loginBtn').click()});
+document.getElementById('loginEmail').addEventListener('keydown', function(e){if(e.key==='Enter') document.getElementById('loginBtn').click()});
+</script>
+</body>
+</html>
